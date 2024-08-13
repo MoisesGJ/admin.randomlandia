@@ -30,17 +30,15 @@ export async function POST(request) {
       );
     }
 
-    // Crear token de sesión
     const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: "1h" });
 
-    // Configurar cookies
     const headers = new Headers();
     headers.append(
       "Set-Cookie",
       cookie.serialize("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Solo usar cookies seguras en producción
-        maxAge: 3600, // 1 hora
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 3600,
         path: "/",
       })
     );
