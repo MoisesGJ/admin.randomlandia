@@ -1,9 +1,9 @@
 import Title from "@/components/dashboard/title.jsx";
 
-export default function Dashboard() {
+export default function Sandias() {
   return (
     <>
-      <Title text="Dashboard" />
+      <Title text="Sandías" />
     </>
   );
 }

@@ -5,8 +5,8 @@ export default function Tools() {
     <main
       className={`fix-h-screen min-w-screen overflow-hidden bg-oldwhite relative`}
     >
-      <div className="rotate-90 md:rotate-0 absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-orange italic">
-        <h2 className="absolute start-4 -top-2.5 font-bold">Nuestras</h2>
+      <div className="rotate-90 md:rotate-0 absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-orange">
+        <h2 className="absolute -top-2.5 font-bold">Nuestras</h2>
         <h1 className="text-9xl font-semibold">Tecnologías</h1>
       </div>
       <Manage />
