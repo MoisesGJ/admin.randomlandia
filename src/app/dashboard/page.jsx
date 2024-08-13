@@ -1,3 +1,7 @@
 export default function Dashboard() {
-  return <h1>Welcome to Dashboard</h1>;
+  return (
+    <main className="fix-h-screen">
+      <h1>Welcome to Dashboard</h1>
+    </main>
+  );
 }
