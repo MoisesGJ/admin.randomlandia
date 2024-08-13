@@ -27,7 +27,7 @@ export default function DashboardLayout({ title, children }) {
   }, [isSidebarOpen]);
 
   return (
-    <>
+    <section className="fix-h-screen">
       <button
         onClick={toggleSidebar}
         aria-controls="default-sidebar"
@@ -208,6 +208,6 @@ export default function DashboardLayout({ title, children }) {
         {title}
         {children}
       </main>
-    </>
+    </section>
   );
 }
