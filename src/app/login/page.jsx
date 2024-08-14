@@ -82,7 +82,7 @@ export default function Login() {
       )}
 
       <form
-        className={`p-5 bg-white rounded-none md:rounded-2xl w-full fix-h-screen md:h-96 md:w-6/12 flex flex-col justify-center items-center ${
+        className={`p-5 bg-white rounded-none md:rounded-2xl w-full h-full md:h-96 md:w-6/12 flex flex-col justify-center items-center ${
           state?.errors?.user || state?.errors?.password ? "gap-8" : "gap-5"
         }`}
         onSubmit={handleSubmit}
