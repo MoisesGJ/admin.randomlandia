@@ -2,15 +2,67 @@
 
 import Title from "@/components/dashboard/title.jsx";
 import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Keys() {
+  const pathname = "https://cdn.randomlandia.com/icons/";
   const keys = [
     {
-      path: "facebook.com",
-      domain: "Facebook",
-      user: "Random",
-      email: "random",
-      password: "adsadaaaaaaaaaaaaaaaaaaaaaaaa",
+      path: "https://auth.linktr.ee/login",
+      image: "linktree",
+      user: null,
+      email: process.env.NEXT_PUBLIC_EMAIL_KEYS,
+      password: process.env.NEXT_PUBLIC_PASSWORD_KEYS,
+    },
+    {
+      path: "https://www.namecheap.com/myaccount/login/",
+      image: "namecheap",
+      user: process.env.NEXT_PUBLIC_USER_KEYS,
+      email: null,
+      password: process.env.NEXT_PUBLIC_PASSWORD_KEYS,
+    },
+    {
+      path: "https://accounts.spotify.com/en/login",
+      image: "spotify",
+      user: null,
+      email: process.env.NEXT_PUBLIC_EMAIL_KEYS,
+      password: process.env.NEXT_PUBLIC_PASSWORD_KEYS,
+    },
+    {
+      path: "https://www.tiktok.com/login/phone-or-email/email",
+      image: "tiktok",
+      user: null,
+      email: process.env.NEXT_PUBLIC_EMAIL_KEYS,
+      password: process.env.NEXT_PUBLIC_PASSWORD_KEYS,
+    },
+    {
+      path: "https://www.instagram.com/accounts/login/",
+      image: "instagram",
+      user: null,
+      email: process.env.NEXT_PUBLIC_EMAIL_KEYS,
+      password: process.env.NEXT_PUBLIC_PASSWORD_KEYS,
+    },
+    {
+      path: "https://github.com/login",
+      image: "github",
+      user: "",
+      email: process.env.NEXT_PUBLIC_EMAIL_KEYS,
+      password: process.env.NEXT_PUBLIC_PASSWORD_KEYS,
+    },
+    {
+      path: "https://gmail.com",
+      image: "gmail",
+      user: null,
+      email: process.env.NEXT_PUBLIC_EMAIL_KEYS,
+      password: process.env.NEXT_PUBLIC_PASSWORD_KEYS,
+    },
+    {
+      path: "https://www.facebook.com/login",
+      image: "facebook",
+      user: null,
+      email: process.env.NEXT_PUBLIC_EMAIL_KEYS,
+      password: process.env.NEXT_PUBLIC_PASSWORD_KEYS,
     },
   ];
 
@@ -18,24 +70,45 @@ export default function Keys() {
     <>
       <Title text="Keys" />
 
-      <section className="p-10">
-        <div className="grid grid-cols-4 font-semibold">
-          <div>URL</div>
-          <div>Usuario</div>
-          <div>Correo</div>
-          <div>Contraseña</div>
+      <section className="pt-10 md:p-10 space-y-3">
+        <div className="grid grid-cols-6 font-semibold text-center mx-auto bg-gray-400/30 [&>div]:overflow-hidden">
+          <div className="col-span-1">Social</div>
+          <div className="col-span-2">Usuario</div>
+          <div className="col-span-3">Contraseña</div>
         </div>
 
-        {keys.map(({ path, domain, user, password }, index) => {
+        {keys.map(({ path, image, user, email, password }, index) => {
           return (
             <div
               key={index}
-              className="grid grid-cols-4 py-3"
+              className="grid grid-cols-6 text-center mx-auto bg-gray-400/05"
             >
-              <Key>{path}</Key>
-              <Key>{domain}</Key>
-              <Key>{user}</Key>
-              <Key password={true}>{password}</Key>
+              <Key span="1">
+                <Link
+                  href={"/dashboard/keys/"}
+                  legacyBehavior
+                >
+                  <a
+                    href={path}
+                    target="_blank"
+                  >
+                    <Image
+                      src={`${pathname}${image}.webp`}
+                      width={40}
+                      height={40}
+                      alt={image}
+                      className="m-auto"
+                    />
+                  </a>
+                </Link>
+              </Key>
+              <Key span="2">{user || email}</Key>
+              <Key
+                span="3"
+                password={true}
+              >
+                {password}
+              </Key>
             </div>
           );
         })}
@@ -44,18 +117,22 @@ export default function Keys() {
   );
 }
 
-function Key({ children, password }) {
+function Key({ children, password, span }) {
   const [viewPass, setViewPass] = useState(false);
-  const [content, setContent] = useState("**********");
+  const [content, setContent] = useState("************");
 
   return (
     <div
-      className={`min-w-full relative ${
+      className={`col-span-${span} overflow-x-scroll relative ${
         password ? "flex items-center space-x-3" : ""
       }`}
+      style={{
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+      }}
     >
       <span
-        className="overflow-x-scroll"
+        className="mx-auto overflow-scroll"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
@@ -63,12 +140,13 @@ function Key({ children, password }) {
       >
         {password ? content : children}
       </span>
+
       {password && (
         <button
           type="button"
           className=" text-blue-text"
           onClick={() => {
-            if (viewPass) setContent("**********");
+            if (viewPass) setContent("************");
             else setContent(children);
             setViewPass((prev) => !prev);
           }}

@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Home() {
   const pathName = "https://cdn.randomlandia.com/links";
   const links = [
-    { icon: "/sandias", path: "/dashboard/sandias", name: "Administrador" },
+    { icon: "/sandia", path: "/dashboard/sandias", name: "Administrador" },
     { icon: "/tools", path: "/sharing/tools", name: "Tecnologías" },
   ];
 
@@ -15,7 +15,7 @@ export default function Home() {
       <h1 className="text-5xl text-white font-semibold underline">
         Repositorio
       </h1>
-      <ul className="flex flex-col justify-center items-center gap-2 w-full mx-3 max-w-96">
+      <ul className="flex flex-col justify-center items-center gap-2 w-full px-3 mx-3 max-w-96">
         {links.map(({ icon, path, name }, index) => {
           return (
             <li
