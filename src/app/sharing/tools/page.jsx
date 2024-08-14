@@ -7,7 +7,7 @@ export default function Tools() {
     >
       <div className="rotate-90 md:rotate-0 absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-orange">
         <h2 className="absolute -top-2.5 font-bold">Nuestras</h2>
-        <h1 className="text-9xl font-semibold">Tecnologías</h1>
+        <h1 className="text-6xl md:text-9xl font-semibold">Tecnologías</h1>
       </div>
       <Manage />
     </main>

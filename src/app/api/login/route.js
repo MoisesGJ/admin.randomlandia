@@ -30,7 +30,7 @@ export async function POST(request) {
       );
     }
 
-    const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: "1h" });
+    const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: "3d" });
 
     const headers = new Headers();
     headers.append(
@@ -38,7 +38,7 @@ export async function POST(request) {
       cookie.serialize("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        maxAge: 3600,
+        maxAge: 3 * 24 * 60 * 60,
         path: "/",
       })
     );

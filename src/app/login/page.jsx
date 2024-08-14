@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 const schema = z.object({
   user: z.string().min(2, {
-    message: "El nombre de usuario debe tener al menos 2 caracteres.",
+    message: "El usuario debe tener al menos 2 caracteres.",
   }),
   password: z
     .string()
@@ -68,7 +68,7 @@ export default function Login() {
   };
 
   return (
-    <main className="h-screen w-screen flex justify-center items-center bg-blue relative overflow-hidden">
+    <main className="fix-h-screen w-screen flex justify-center items-center bg-blue relative overflow-hidden">
       {loading && (
         <div className="absolute z-10 top-0 start-0 h-screen w-screen font-bold text-blue-text md:text-white text-4xl backdrop-blur-sm flex justify-center mt-16">
           Cargando...
@@ -82,12 +82,12 @@ export default function Login() {
       )}
 
       <form
-        className={`p-5 bg-white rounded-2xl w-full h-full md:h-96 md:w-6/12 flex flex-col justify-center items-center ${
+        className={`p-5 bg-white rounded-none md:rounded-2xl w-full fix-h-screen md:h-96 md:w-6/12 flex flex-col justify-center items-center ${
           state?.errors?.user || state?.errors?.password ? "gap-8" : "gap-5"
         }`}
         onSubmit={handleSubmit}
       >
-        <h1 className="text-4xl mb-5">Inicia sesión</h1>
+        <h1 className="text-4xl mb-5 font-semibold">Inicia sesión</h1>
 
         <div className="relative w-full max-w-96">
           {state?.errors?.user && <ErrorMessage message={state.errors.user} />}
