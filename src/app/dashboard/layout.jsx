@@ -1,18 +1,16 @@
 "use client";
 
-import withAuth from "@/components/Auth";
-import useLogout from "@/hooks/session/logout";
-
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
+import logOut from "./actions";
 
 import Link from "next/link";
 
-function DashboardLayout({ children }) {
+export default function DashboardLayout({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-
-  const logout = useLogout();
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
@@ -32,6 +30,11 @@ function DashboardLayout({ children }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
+
+  const handleLogOut = async () => {
+    const result = await logOut();
+    if (result) router.push("/login");
+  };
 
   return (
     <section className="fix-h-screen bg-oldwhite">
@@ -131,7 +134,7 @@ function DashboardLayout({ children }) {
             <li>
               <button
                 className="flex items-center p-2 rounded-lg text-white hover:bg-yellow-800/30 group"
-                onClick={logout}
+                onClick={handleLogOut}
               >
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-white transition duration-75 group-hover:text-gray-200"
@@ -170,5 +173,3 @@ function DashboardLayout({ children }) {
     </section>
   );
 }
-
-export default withAuth(DashboardLayout);

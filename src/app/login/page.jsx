@@ -1,88 +1,61 @@
 "use client";
 
 import { useState } from "react";
-import { z } from "zod";
 import { useRouter } from "next/navigation";
-
-const schema = z.object({
-  user: z.string().min(2, {
-    message: "El usuario debe tener al menos 2 caracteres.",
-  }),
-  password: z
-    .string()
-    .min(2, { message: "La contraseña debe tener al menos 2 caracteres." }),
-});
+import { login } from "./actions"; // Importa tu función de login desde actions
 
 export default function Login() {
-  const router = useRouter(); // Utiliza useRouter() aquí
+  const router = useRouter();
 
   const [state, setState] = useState({ message: "", errors: {} });
   const [showPassword, setShowPassword] = useState(false);
-
-  const [messageState, setMessageState] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-
-    const result = schema.safeParse(data);
-    if (!result.success) {
-      const errors = result.error.issues.reduce((acc, issue) => {
-        acc[issue.path[0]] = issue.message;
-        return acc;
-      }, {});
-
-      setState({ message: "", errors });
-      return;
-    }
 
     try {
       setLoading(true);
-      const response = await fetch("/api/login", {
-        method: "POST",
-        body: formData,
-      });
 
-      const result = await response.json();
+      const result = await login(formData);
 
-      if (response.ok) {
-        setState({ message: result.message, errors: {} });
-        router.push("/dashboard/");
+      if (!result?.success) {
+        await delay(1500);
+        setLoading(false);
+        setState({
+          message: result?.errors?.global || "",
+          errors: result?.errors || null,
+        });
       } else {
-        setMessageState(true);
-        setState({ message: "Credenciales inválidas", errors: result.errors });
-
-        setTimeout(() => {
-          setMessageState(false);
-        }, 3000);
+        router.push(result.redirect);
       }
     } catch (error) {
       console.error("Error:", error);
       setState({ message: "Error de red.", errors: {} });
     } finally {
-      setLoading(false);
+      setTimeout(() => setState({ message: "", errors: {} }), 2000);
     }
   };
-
   return (
     <main className="fix-h-screen w-screen flex justify-center items-center bg-blue relative overflow-hidden">
       {loading && (
-        <div className="absolute z-10 top-0 start-0 h-screen w-screen font-bold text-blue-text md:text-white text-4xl backdrop-blur-sm flex justify-center mt-16">
+        <div className="absolute z-10 top-0 start-0 fix-h-screen w-screen font-bold text-blue-text md:text-white text-4xl backdrop-blur-sm flex justify-center mt-16">
           Cargando...
         </div>
       )}
 
-      {messageState && state.message && (
+      {state.message && (
         <div className="absolute text-white top-0 mt-12 bg-red-600 p-5 rounded-lg font-bold">
           {state.message}
         </div>
       )}
 
       <form
-        className={`p-5 bg-white rounded-none md:rounded-2xl w-full h-full md:h-96 md:w-6/12 flex flex-col justify-center items-center ${
+        className={`p-5 bg-white rounded-none md:rounded-2xl w-full h-screen md:h-96 md:w-6/12 flex flex-col justify-center items-center ${
           state?.errors?.user || state?.errors?.password ? "gap-8" : "gap-5"
         }`}
         onSubmit={handleSubmit}
