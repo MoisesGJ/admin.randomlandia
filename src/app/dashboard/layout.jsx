@@ -37,12 +37,12 @@ export default function DashboardLayout({ children }) {
   };
 
   return (
-    <section className="fix-h-screen bg-oldwhite">
+    <section className="fix-h-screen max-w-screen bg-oldwhite">
       <button
         onClick={toggleSidebar}
         aria-controls="default-sidebar"
         type="button"
-        className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-blue-text rounded-lg sm:hidden  focus:outline-none focus:ring-2 hover:bg-gray-700 focus:ring-gray-600"
+        className="inline-flex  items-center p-2 mt-2 ms-3 text-sm text-blue-text rounded-lg sm:hidden  focus:outline-none focus:ring-2 hover:bg-gray-700 focus:ring-gray-600"
       >
         <span className="sr-only">Abrir menú</span>
         <svg
@@ -167,7 +167,7 @@ export default function DashboardLayout({ children }) {
         ></div>
       )}
 
-      <main className="p-8 sm:ml-64 text-blue-text fix-h-screen">
+      <main className="p-8 overflow-hidden sm:ml-64 text-blue-text h-full">
         {children}
       </main>
     </section>
