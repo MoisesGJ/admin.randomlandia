@@ -11,8 +11,8 @@ export default function Home() {
   ];
 
   return (
-    <main className="overflow-hidden fix-h-screen w-screen bg-orange/80 flex flex-col justify-center items-center gap-12">
-      <h1 className="text-5xl text-white font-semibold underline">
+    <main className="overflow-hidden fix-h-screen w-screen bg-oldwhite/30 flex flex-col justify-center items-center gap-12">
+      <h1 className="text-5xl text-orange font-semibold underline">
         Repositorio
       </h1>
       <ul className="flex flex-col justify-center items-center gap-2 w-full px-3 mx-3 max-w-96">
@@ -20,16 +20,21 @@ export default function Home() {
           return (
             <li
               key={`link-${index}`}
-              className="flex items-center gap-5 w-full bg-blue rounded-xl p-3 text-white text-xl font-bold overflow-hidden shadow-xl shadow-blue-text/50 hover:scale-110 hover:bg-orange hover:border-blue"
+              className="w-full bg-blue rounded-xl text-white text-xl font-bold overflow-hidden shadow-xl shadow-blue-text/50 hover:scale-110 hover:bg-orange hover:border-blue"
             >
-              <Image
-                src={`${pathName}${icon}.webp`}
-                width={40}
-                height={40}
-                alt={name}
-                className="ms-5"
-              />
-              <Link href={path}>{name}</Link>
+              <Link
+                href={path}
+                className="flex items-center gap-5 p-3"
+              >
+                <Image
+                  src={`${pathName}${icon}.webp`}
+                  width={40}
+                  height={40}
+                  alt={name}
+                  className="ms-5"
+                />
+                {name}
+              </Link>
             </li>
           );
         })}
