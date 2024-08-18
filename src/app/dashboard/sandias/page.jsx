@@ -6,9 +6,10 @@ import Papa from "papaparse";
 import { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 
-import { createSandia } from "./actions";
+import { createSandia, createManySandias } from "./actions";
 
 export default function Sandias() {
+  const [stateFile, setStateFile] = useState({ message: "", status: false });
   const [state, setState] = useState({ message: "", errors: {} });
 
   const [loading, setLoading] = useState(false);
@@ -24,7 +25,6 @@ export default function Sandias() {
       setLoading(true);
 
       const result = await createSandia(formData);
-      console.log(result);
 
       await delay(1500);
       setLoading(false);
@@ -44,13 +44,43 @@ export default function Sandias() {
         await delay(1500);
         e.target.reset();
         setState({ message: "", errors: {} });
-        //router.push(result.redirect);
       }
     } catch (error) {
       console.error("Error:", error);
       setState({ message: "Error de red.", errors: {} });
     }
   };
+
+  const handleDataSandiasFile = async (sandias) => {
+    try {
+      setLoading(true);
+
+      console.log(sandias);
+
+      const result = await createManySandias(sandias);
+
+      await delay(1500);
+      setLoading(false);
+
+      if (!result?.success) {
+        setStateFile({
+          message: "Error al crear sandías, siga el formato del la plantilla.",
+          status: false,
+        });
+      } else {
+        setStateFile({ message: "¡Sandias añadidas!", status: true });
+
+        await delay(1500);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setStateFile({ message: "Error de red", status: false });
+    } finally {
+      await delay(1500);
+      setStateFile({ message: "", status: false });
+    }
+  };
+
   return (
     <div className="relative">
       {loading && (
@@ -58,7 +88,10 @@ export default function Sandias() {
       )}
       <Title text="Crear sandías" />
       <section className="flex flex-col justify-center items-center pt-5">
-        <DragDrop />
+        <DragDrop
+          sandiasAll={handleDataSandiasFile}
+          state={stateFile}
+        />
         <div className="inline-flex items-center justify-center w-full relative">
           <hr className="w-96 h-px my-8 border-0 bg-gray-700" />
           <span className="absolute px-3 font-medium rounded-2xl -translate-x-1/2  left-1/2 text-white bg-gray-900">
@@ -221,7 +254,7 @@ function Form({ onSubmit, state }) {
   );
 }
 
-function DragDrop() {
+function DragDrop({ sandiasAll, state }) {
   const fileTypes = ["CSV"];
 
   const handleChange = (file) => {
@@ -229,7 +262,7 @@ function DragDrop() {
       header: true,
       skipEmptyLines: true,
       complete: function (results) {
-        update(results.data);
+        sandiasAll(results.data);
       },
     });
   };
@@ -237,6 +270,17 @@ function DragDrop() {
   return (
     <>
       <SubTitle>Sube un archivo</SubTitle>
+
+      {state.message && (
+        <div
+          className={`text-white ${
+            state.status ? "bg-green-600" : "bg-red-600"
+          } px-3 py-1 my-3 mb-5 rounded-lg font-bold`}
+        >
+          {state.message}
+        </div>
+      )}
+
       <div className="bg-[#FDF1DF] shadow-sm rounded-2xl h-32 w-full flex flex-col gap-4 [&>label]:min-h-full [&>label]:px-5 [&>label]:min-w-full [&>label>input]:w-fit [&>label]:border-none [&_label_div]:ms-2 [&_path]:fill-blue-text">
         <FileUploader
           handleChange={handleChange}

@@ -2,34 +2,38 @@
 
 import { z } from "zod";
 
+const user = process.env.USER;
+const password = process.env.PASSWORD;
+
+const allowedTopics = [
+  "ciencias",
+  "deportes",
+  "nerd",
+  "idiomas",
+  "matematicas",
+  "artes",
+  "mundo",
+  "vida",
+];
+
+const schema = z.object({
+  topic: z.enum(allowedTopics, {
+    message: "Debe seleccionar un tema válido",
+  }),
+  content: z.string().min(2, {
+    message: "El contenido debe tener al menos 2 caracteres.",
+  }),
+  question: z
+    .string()
+    .min(2, { message: "La pregunta debe tener al menos 2 caracteres." }),
+  answer: z.boolean(),
+  reference: z
+    .string()
+    .min(2, { message: "La referencia debe tener al menos 2 caracteres." }),
+});
+const arraySchema = z.array(schema);
+
 export async function createSandia(formData) {
-  const allowedTopics = [
-    "ciencia",
-    "deportes",
-    "nerd",
-    "idiomas",
-    "matematicas",
-    "artes",
-    "mundo",
-    "vida",
-  ];
-
-  const schema = z.object({
-    topic: z.enum(allowedTopics, {
-      message: "Debe seleccionar un tema válido",
-    }),
-    content: z.string().min(2, {
-      message: "El contenido debe tener al menos 2 caracteres.",
-    }),
-    question: z
-      .string()
-      .min(2, { message: "La pregunta debe tener al menos 2 caracteres." }),
-    answer: z.boolean(),
-    reference: z
-      .string()
-      .min(2, { message: "La referencia debe tener al menos 2 caracteres." }),
-  });
-
   const validation = schema.safeParse({
     topic: formData.get("topic"),
     content: formData.get("content"),
@@ -47,9 +51,6 @@ export async function createSandia(formData) {
     return { success: false, errors };
   }
 
-  const user = process.env.USER;
-  const password = process.env.PASSWORD;
-
   const state = await create(user, password, validation.data);
 
   if (state.error) return { success: false, errors: { global: state.error } };
@@ -57,8 +58,27 @@ export async function createSandia(formData) {
   return { success: true };
 }
 
-async function create(user, password, data) {
-  const APISandias = process.env.API + "sandias/";
+export async function createManySandias(sandias) {
+  try {
+    const convertedFormDataArray = sandias.map((item) => ({
+      ...item,
+      answer: item.answer === "true",
+    }));
+
+    const parsedData = arraySchema.parse(convertedFormDataArray);
+    const state = await create(user, password, parsedData, true);
+
+    if (state.error) return { success: false, errors: { global: state.error } };
+
+    return { success: true };
+  } catch (e) {
+    console.error(e);
+    return { success: false };
+  }
+}
+
+async function create(user, password, data, many) {
+  const APISandias = `${process.env.API}sandias/${many ? "many" : ""}`;
 
   try {
     const credentials = btoa(`${user}:${password}`);
@@ -66,15 +86,13 @@ async function create(user, password, data) {
       method: "POST",
       headers: {
         Authorization: `Basic ${credentials}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        "Content-Type": `${many ? "text/plain" : "application/json"}`,
       },
       body: JSON.stringify(data),
     });
 
     const response = await r.json();
 
-    console.log(response);
     if (!response.success) return { error: response.message };
 
     return true;
