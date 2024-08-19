@@ -42,7 +42,7 @@ export default function DashboardLayout({ children }) {
         onClick={toggleSidebar}
         aria-controls="default-sidebar"
         type="button"
-        className="inline-flex  items-center p-2 mt-2 ms-3 text-sm text-blue-text rounded-lg sm:hidden  focus:outline-none focus:ring-2 hover:bg-gray-700 focus:ring-gray-600"
+        className="inline-flex  items-center p-2 mt-2 ms-3 text-sm text-blue-text rounded-lg sm:hidden  focus:outline-none focus:ring-2 hover:bg-blue hover:text-white focus:ring-blue"
       >
         <span className="sr-only">Abrir menú</span>
         <svg
@@ -128,6 +128,28 @@ export default function DashboardLayout({ children }) {
                   <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
                 </svg>
                 <span className="flex-1 ms-3 whitespace-nowrap">Keys</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/dashboard/biometric"
+                className={`${
+                  pathname === "/dashboard/biometric"
+                    ? "font-bold underline"
+                    : ""
+                } flex items-center p-2 rounded-lg text-white hover:bg-yellow-800/30 group`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  className="flex-shrink-0 w-5 h-5 text-white transition duration-75 group-hover:text-gray-200"
+                  viewBox="0 -960 960 960"
+                  fill="#e8eaed"
+                >
+                  <path d="M280-360q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm0 120q-100 0-170-70T40-480q0-100 70-170t170-70q81 0 141.5 46T506-560h335l79 79-140 160-100-79-80 80-80-80h-14q-25 72-87 116t-139 44Z" />
+                </svg>
+
+                <span className="flex-1 ms-3 whitespace-nowrap">Password</span>
               </Link>
             </li>
             <hr className="h-px my-8 border-0 bg-gray-100/85 " />

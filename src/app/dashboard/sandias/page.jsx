@@ -55,8 +55,6 @@ export default function Sandias() {
     try {
       setLoading(true);
 
-      console.log(sandias);
-
       const result = await createManySandias(sandias);
 
       await delay(1500);
@@ -115,7 +113,6 @@ function Form({ onSubmit, state }) {
   const [check, setCheck] = useState(true);
 
   const handleChecked = (isCheck) => {
-    console.log(isCheck);
     setCheck(isCheck);
   };
   return (
