@@ -23,6 +23,7 @@
     "react-dom": "^18",
     "react-drag-drop-files": "^2.3.10",
     "react-viewport-height": "^1.2.2",
+    "resend": "^4.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
