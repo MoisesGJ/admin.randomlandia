@@ -1,7 +1,5 @@
 "use server";
 
-import { getUserIdFromSession } from "@/app/_lib/session";
-
 import {
   getUserFromDB,
   saveNewPasskey,
@@ -11,9 +9,7 @@ import {
 import { Register } from "@/app/_lib/simplewebauthn/create/options-create";
 import { VerifyCreate } from "@/app/_lib/simplewebauthn/create/verify-create";
 
-export async function CreateOptions() {
-  const idUser = await getUserIdFromSession();
-
+export async function CreateOptions(idUser) {
   const user = await getUserFromDB(idUser);
 
   const userPasskeys = await getUserPasskeys(idUser);
@@ -22,19 +18,24 @@ export async function CreateOptions() {
   return options;
 }
 
-export async function CreateVerify(registration, currOptions) {
+export async function CreateVerify(registration, currOptions, idUser) {
   const verifyPass = await VerifyCreate(registration, currOptions);
 
   if (!verifyPass.state) return false;
 
   const { passKey } = verifyPass;
 
-  createPassKey(passKey.registrationInfo, passKey.currentOptions, passKey.body);
+  createPassKey(
+    passKey.registrationInfo,
+    passKey.currentOptions,
+    passKey.body,
+    idUser
+  );
 
   return true;
 }
 
-async function createPassKey(registrationInfo, currentOptions, body) {
+async function createPassKey(registrationInfo, currentOptions, body, idUser) {
   try {
     const {
       credentialID,
@@ -43,8 +44,6 @@ async function createPassKey(registrationInfo, currentOptions, body) {
       credentialDeviceType,
       credentialBackedUp,
     } = registrationInfo;
-
-    const idUser = await getUserIdFromSession();
 
     const newPasskey = {
       user: idUser,

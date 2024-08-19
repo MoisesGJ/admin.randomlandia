@@ -1,5 +1,7 @@
 "use client";
 
+import { useContextSession } from "@/components/dashboard/Context";
+
 import Title from "@/components/dashboard/title";
 import { CreateOptions, CreateVerify } from "./actions";
 
@@ -8,11 +10,12 @@ import { startRegistration } from "@simplewebauthn/browser";
 import { useState } from "react";
 
 export default function RegisterBiometric() {
+  const session = useContextSession();
   const [message, setMessage] = useState("");
 
   const registratePass = async () => {
     try {
-      const data = await CreateOptions();
+      const data = await CreateOptions(session._id);
 
       if (!data.state) {
         return setMessage("Error al crear una contraseña");
@@ -22,7 +25,11 @@ export default function RegisterBiometric() {
 
       const attResp = await startRegistration(options);
 
-      const verificationResp = await CreateVerify(attResp, options);
+      const verificationResp = await CreateVerify(
+        attResp,
+        options,
+        session._id
+      );
 
       if (verificationResp) {
         setMessage("¡Registro exitoso!");
@@ -51,8 +58,6 @@ export default function RegisterBiometric() {
           Crear contraseña
         </button>
       </section>
-
-      {/* <button onClick={authPass}>Registrarte</button> */}
 
       {message && (
         <p className="mt-12 bg-blue rounded-3xl p-5 text-white">{message}</p>
