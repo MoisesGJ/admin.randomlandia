@@ -34,7 +34,7 @@ export async function decrypt(session) {
 
     return payload;
   } catch (error) {
-    console.error("Failed to verify session");
+    error.name !== "JWSInvalid" && console.error(error);
   }
 }
 
@@ -67,4 +67,14 @@ export async function deleteSession() {
   cookies().delete(cookie.name);
 
   return { redirect: "/login" };
+}
+
+export async function getUserIdFromSession() {
+  try {
+    const { userId } = await verifySession();
+    return userId;
+  } catch (error) {
+    console.error("Error verifying session:", error);
+    return false;
+  }
 }
