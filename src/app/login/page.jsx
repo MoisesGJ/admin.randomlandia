@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { magicLink } from "./actions";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { magicLink } from './actions';
 
-import { AuthOptions, AuthVerify } from "./actions";
+import { AuthOptions, AuthVerify } from './actions';
 
-import { startAuthentication } from "@simplewebauthn/browser";
+import { startAuthentication } from '@simplewebauthn/browser';
 
 export default function Login() {
   const router = useRouter();
 
-  const [state, setState] = useState({ message: "", errors: {} });
+  const [state, setState] = useState({ message: '', errors: {} });
   const [loading, setLoading] = useState(false);
 
-  const [action, setAction] = useState("");
+  const [action, setAction] = useState('');
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -27,9 +27,9 @@ export default function Login() {
       setLoading(true);
       let result;
 
-      if (action === "magic-link") {
+      if (action === 'magic-link') {
         result = await magicLink(formData);
-      } else if (action === "biometric") {
+      } else if (action === 'biometric') {
         result = await AuthOptions(formData);
       }
 
@@ -38,11 +38,11 @@ export default function Login() {
 
       if (!result.success) {
         setState({
-          message: result?.errors?.global || "",
+          message: result?.errors?.global || '',
           errors: result?.errors || null,
         });
         await delay(1500);
-        setState({ message: "", errors: result?.errors || null });
+        setState({ message: '', errors: result?.errors || null });
       } else {
         if (result.options) {
           const options = result.options;
@@ -51,7 +51,7 @@ export default function Login() {
 
           if (!attResp) {
             setState({
-              message: attResp.errors?.global || "Error al recuperar opciones",
+              message: attResp.errors?.global || 'Error al recuperar opciones',
               errors: {},
             });
           }
@@ -61,7 +61,7 @@ export default function Login() {
           if (!authenticationResp) {
             setState({
               message:
-                authenticationResp.errors?.global || "Credenciales inválidas",
+                authenticationResp.errors?.global || 'Credenciales inválidas',
               errors: {},
             });
           }
@@ -70,16 +70,16 @@ export default function Login() {
         } else {
           setState({
             globalSuccess:
-              result.global || "¡Revisa tu correo para iniciar sesión!",
+              result.global || '¡Revisa tu correo para iniciar sesión!',
           });
         }
       }
     } catch (error) {
-      console.error("Error:", error);
-      setState({ message: "Hubo un error.", errors: {} });
+      console.error('Error:', error);
+      setState({ message: 'Hubo un error.', errors: {} });
 
       await delay(1500);
-      setState({ message: "", errors: {} });
+      setState({ message: '', errors: {} });
     }
   };
 
@@ -105,10 +105,9 @@ export default function Login() {
 
       <form
         className={`p-5 bg-white rounded-none md:rounded-tr-3xl md:rounded-bl-3xl w-full md:h-96 md:w-6/12 flex flex-col justify-center items-center ${
-          state?.errors?.user || state?.errors?.password ? "gap-8" : "gap-5"
+          state?.errors?.user || state?.errors?.password ? 'gap-8' : 'gap-5'
         }`}
-        onSubmit={handleSubmit}
-      >
+        onSubmit={handleSubmit}>
         <h1 className="text-4xl my-5 font-semibold">Inicia sesión</h1>
 
         <div className="relative w-full max-w-96">
@@ -120,28 +119,43 @@ export default function Login() {
             name="email"
             className="border-[1.5px] border-blue rounded-md w-full p-3 text-blue-text"
             placeholder="Correo electrónico"
+            autocomplete="email"
             required
           />
         </div>
 
-        <h2>Autenticación sin contraseñas</h2>
+        <h2>Elige una opción:</h2>
 
         <button
           type="submit"
           name="action"
           value="magic-link"
-          className="border-[1.5px] p-2 border-blue hover:bg-blue hover:text-white hover:font-bold rounded-md w-full max-w-48"
-          onClick={() => setAction("magic-link")}
-        >
+          className="border-[1.5px] p-2 border-blue hover:bg-blue hover:text-white hover:font-bold hover:fill-white rounded-md w-full max-w-48 flex gap-3 items-center justify-center"
+          onClick={() => setAction('magic-link')}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="18px"
+            viewBox="0 -960 960 960"
+            width="18px"
+            fill="fill-blue">
+            <path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm320-280 320-200v-80L480-520 160-720v80l320 200Z" />
+          </svg>
           Enviar correo
         </button>
         <button
           type="submit"
           name="action"
           value="biometric"
-          className="border-[1.5px] p-2 border-blue hover:bg-blue hover:text-white hover:font-bold rounded-md w-full max-w-48"
-          onClick={() => setAction("biometric")}
-        >
+          className="border-[1.5px] p-2 border-blue hover:bg-blue hover:text-white hover:fill-white hover:font-bold rounded-md w-full max-w-48 flex gap-3 items-center justify-center"
+          onClick={() => setAction('biometric')}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="18px"
+            viewBox="0 -960 960 960"
+            width="18px"
+            fill="fill-blue">
+            <path d="M280-240q-100 0-170-70T40-480q0-100 70-170t170-70q81 0 141.5 45.5T506-560h414v160h-80v160H680v-160H506q-24 69-84.5 114.5T280-240Zm0-160q33 0 56.5-23.5T360-480q0-33-23.5-56.5T280-560q-33 0-56.5 23.5T200-480q0 33 23.5 56.5T280-400Z" />
+          </svg>
           Biométricos
         </button>
       </form>
