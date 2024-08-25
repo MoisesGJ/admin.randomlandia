@@ -1,8 +1,8 @@
-import "server-only";
+import 'server-only';
 
-import { SignJWT, jwtVerify } from "jose";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { SignJWT, jwtVerify } from 'jose';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -11,56 +11,54 @@ const secretEmailKey = process.env.EMAIL_SECRET;
 const encodeEmaildKey = new TextEncoder().encode(secretEmailKey);
 
 const cookie = {
-  name: "session",
+  name: 'session',
   options: {
     httpOnly: true,
     secure: true,
-    expires: 24 * 60 * 60 * 1000,
-    sameSite: "lax",
-    path: "/",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    sameSite: 'lax',
+    path: '/',
   },
 };
 
 export async function encrypt(payload) {
   return new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
+    .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime("1d")
+    .setExpirationTime('1d')
     .sign(encodedKey);
 }
 
 export async function decrypt(session) {
   try {
     const { payload } = await jwtVerify(session, encodedKey, {
-      algorithms: ["HS256"],
+      algorithms: ['HS256'],
     });
 
     return payload;
   } catch (error) {
-    error.name !== "JWSInvalid" && console.error(error);
+    error.name !== 'JWSInvalid' && console.error(error);
   }
 }
 
 export async function createSession(userId) {
-  const expires = new Date(Date.now() + cookie.duration);
-  const session = await encrypt({ userId, expires });
+  const session = await encrypt({ userId });
+  cookies().set(cookie.name, session, cookie.options);
 
-  cookies().set(cookie.name, session, { ...cookie.options, expires });
-
-  return { redirect: "/dashboard" };
+  return { redirect: '/dashboard' };
 }
 
 export async function verifySession() {
   const sessionCookie = cookies().get(cookie.name)?.value;
 
   if (!sessionCookie) {
-    redirect("/login");
+    redirect('/login');
   }
 
   const session = await decrypt(sessionCookie);
 
   if (!session?.userId) {
-    redirect("/login");
+    redirect('/login');
   }
 
   return { userId: session.userId };
@@ -69,7 +67,7 @@ export async function verifySession() {
 export async function deleteSession() {
   cookies().delete(cookie.name);
 
-  return { redirect: "/login" };
+  return { redirect: '/login' };
 }
 
 export async function getUserIdFromSession() {
@@ -77,21 +75,21 @@ export async function getUserIdFromSession() {
     const { userId } = await verifySession();
     return userId;
   } catch (error) {
-    console.error("Error verifying session:", error);
+    console.error('Error verifying session:', error);
     return false;
   }
 }
 
 export async function createLink(user) {
   const token = await new SignJWT(user)
-    .setProtectedHeader({ alg: "HS256" })
+    .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime("5m")
+    .setExpirationTime('5m')
     .sign(encodeEmaildKey);
 
-  const buf = Buffer.from(token, "utf8");
+  const buf = Buffer.from(token, 'utf8');
 
-  const tokenBase64 = buf.toString("base64");
+  const tokenBase64 = buf.toString('base64');
 
   const url = `${process.env.AUTHN_ORIGIN}/login/${tokenBase64}`;
 
@@ -101,12 +99,12 @@ export async function createLink(user) {
 export async function validateLink(token) {
   try {
     const { payload } = await jwtVerify(token, encodeEmaildKey, {
-      algorithms: ["HS256"],
+      algorithms: ['HS256'],
     });
 
     return { success: true, payload };
   } catch (error) {
-    error.name !== "JWSInvalid" && console.error(error);
+    error.name !== 'JWSInvalid' && console.error(error);
     return { success: false };
   }
 }
