@@ -47,14 +47,14 @@ export default function Sandias() {
       }
     } catch (error) {
       console.error('Error:', error);
-      setState({ message: 'Error de red.', errors: {} });
+      setState({ message: 'Error de red', errors: {} });
     }
   };
 
   const handleDataSandiasFile = async (sandias) => {
-    try {
-      setLoading(true);
+    setLoading(true);
 
+    try {
       const result = await createManySandias(sandias);
 
       await delay(1500);
@@ -62,27 +62,29 @@ export default function Sandias() {
 
       if (!result?.success) {
         setStateFile({
-          message: 'Error al crear sandías, siga el formato del la plantilla.',
+          message: `Error al crear sandías: ${result.errors.global}`,
           status: false,
         });
       } else {
         setStateFile({ message: '¡Sandias añadidas!', status: true });
 
         await delay(1500);
+        setStateFile({ message: '', status: false });
       }
     } catch (error) {
+      setLoading(false);
       console.error('Error:', error);
       setStateFile({ message: 'Error de red', status: false });
     } finally {
-      await delay(1500);
-      setStateFile({ message: '', status: false });
+      //await delay(1500);
+      //setStateFile({ message: '', status: false });
     }
   };
 
   return (
     <div className="relative">
       {loading && (
-        <div className="absolute z-10 top-0 start-0 h-full w-screen backdrop-blur-sm"></div>
+        <div className="absolute z-10 top-0 -start-2 h-full w-screen backdrop-blur-sm"></div>
       )}
       <Title text="Crear sandías" />
       <section className="flex flex-col justify-center items-center pt-5">
@@ -121,9 +123,8 @@ function Form({ onSubmit, state }) {
 
       {state.message && (
         <div
-          className={`text-white ${
-            state.success ? 'bg-green-600' : 'bg-red-600'
-          } px-3 py-1 my-3 mb-5 rounded-lg font-bold`}>
+          className={`text-white ${state.success ? 'bg-green-600' : 'bg-red-600'
+            } px-3 py-1 my-3 mb-5 rounded-lg font-bold`}>
           {state.message}
         </div>
       )}
@@ -208,9 +209,8 @@ function Form({ onSubmit, state }) {
           status={state?.errors?.question}
         />
         <span
-          className={`${
-            check ? 'text-green-600' : 'text-red-700'
-          } ms-auto text-sm italic`}>
+          className={`${check ? 'text-green-600' : 'text-red-700'
+            } ms-auto text-sm italic`}>
           Respuesta correcta: <b>{check ? 'Verdadero' : 'Falso'}</b>
         </span>
         <div>
@@ -283,9 +283,8 @@ function DragDrop({ sandiasAll, state }) {
 
       {state.message && (
         <div
-          className={`text-white ${
-            state.status ? 'bg-green-600' : 'bg-red-600'
-          } px-3 py-1 my-3 mb-5 rounded-lg font-bold`}>
+          className={`text-white ${state.status ? 'bg-green-600' : 'bg-red-600'
+            } px-3 py-1 my-3 mb-5 rounded-lg font-bold`}>
           {state.message}
         </div>
       )}
@@ -446,9 +445,8 @@ function ModalInformation({ closeModal }) {
 function ErrorMessage({ message, status }) {
   return (
     <p
-      className={`${
-        status ? 'visible' : 'invisible'
-      } text-red-500 text-sm whitespace-nowrap`}>
+      className={`${status ? 'visible' : 'invisible'
+        } text-red-500 text-sm whitespace-nowrap`}>
       {message}
     </p>
   );
