@@ -51,29 +51,46 @@ export async function createSandia(formData) {
     return { success: false, errors };
   }
 
-  const state = await create(user, password, validation.data);
+  try {
+    const state = await create(user, password, validation.data);
 
-  if (state.error) return { success: false, errors: { global: state.error } };
+    if (state.error) return { success: false, errors: { global: state.error } };
 
-  return { success: true };
+    return { success: true };
+
+  } catch (error) {
+    return { success: false, errors: { global: error.message } };
+  }
+
 }
 
 export async function createManySandias(sandias) {
   try {
-    const convertedFormDataArray = sandias.map((item) => ({
-      ...item,
-      answer: item.answer === "true",
-    }));
+    const convertedFormDataArray = sandias.map((item) => {
+      if (item.answer === "true") {
+        return {
+          ...item,
+          answer: true,
+        };
+      } else if (item.answer === "false") {
+        return {
+          ...item,
+          answer: false,
+        };
+      } else {
+        throw new Error(`Valor de respuesta inválida en la pregunta: ${item.question}. Se espera "true" o "false".`);
+      }
+    });
 
     const parsedData = arraySchema.parse(convertedFormDataArray);
     const state = await create(user, password, parsedData, true);
 
     if (state.error) return { success: false, errors: { global: state.error } };
 
-    return { success: true };
+    return { success: true, };
   } catch (e) {
     console.error(e);
-    return { success: false };
+    return { success: false, errors: { global: e.message } };
   }
 }
 

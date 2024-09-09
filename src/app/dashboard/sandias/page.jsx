@@ -47,14 +47,14 @@ export default function Sandias() {
       }
     } catch (error) {
       console.error('Error:', error);
-      setState({ message: 'Error de red.', errors: {} });
+      setState({ message: 'Error de red', errors: {} });
     }
   };
 
   const handleDataSandiasFile = async (sandias) => {
-    try {
-      setLoading(true);
+    setLoading(true);
 
+    try {
       const result = await createManySandias(sandias);
 
       await delay(1500);
@@ -63,27 +63,29 @@ export default function Sandias() {
       if (!result?.success) {
         console.log(result)
         setStateFile({
-          message: 'Error al crear sandías, siga el formato del la plantilla.',
+          message: `Error al crear sandías: ${result.errors.global}`,
           status: false,
         });
       } else {
         setStateFile({ message: '¡Sandias añadidas!', status: true });
 
         await delay(1500);
+        setStateFile({ message: '', status: false });
       }
     } catch (error) {
+      setLoading(false);
       console.error('Error:', error);
       setStateFile({ message: 'Error de red', status: false });
     } finally {
-      await delay(1500);
-      setStateFile({ message: '', status: false });
+      //await delay(1500);
+      //setStateFile({ message: '', status: false });
     }
   };
 
   return (
     <div className="relative">
       {loading && (
-        <div className="absolute z-10 top-0 start-0 h-full w-screen backdrop-blur-sm"></div>
+        <div className="absolute z-10 top-0 -start-2 h-full w-screen backdrop-blur-sm"></div>
       )}
       <Title text="Crear sandías" />
       <section className="flex flex-col justify-center items-center pt-5">
