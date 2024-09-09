@@ -61,6 +61,7 @@ export default function Sandias() {
       setLoading(false);
 
       if (!result?.success) {
+        console.log(result)
         setStateFile({
           message: 'Error al crear sandías, siga el formato del la plantilla.',
           status: false,
@@ -121,9 +122,8 @@ function Form({ onSubmit, state }) {
 
       {state.message && (
         <div
-          className={`text-white ${
-            state.success ? 'bg-green-600' : 'bg-red-600'
-          } px-3 py-1 my-3 mb-5 rounded-lg font-bold`}>
+          className={`text-white ${state.success ? 'bg-green-600' : 'bg-red-600'
+            } px-3 py-1 my-3 mb-5 rounded-lg font-bold`}>
           {state.message}
         </div>
       )}
@@ -208,9 +208,8 @@ function Form({ onSubmit, state }) {
           status={state?.errors?.question}
         />
         <span
-          className={`${
-            check ? 'text-green-600' : 'text-red-700'
-          } ms-auto text-sm italic`}>
+          className={`${check ? 'text-green-600' : 'text-red-700'
+            } ms-auto text-sm italic`}>
           Respuesta correcta: <b>{check ? 'Verdadero' : 'Falso'}</b>
         </span>
         <div>
@@ -283,9 +282,8 @@ function DragDrop({ sandiasAll, state }) {
 
       {state.message && (
         <div
-          className={`text-white ${
-            state.status ? 'bg-green-600' : 'bg-red-600'
-          } px-3 py-1 my-3 mb-5 rounded-lg font-bold`}>
+          className={`text-white ${state.status ? 'bg-green-600' : 'bg-red-600'
+            } px-3 py-1 my-3 mb-5 rounded-lg font-bold`}>
           {state.message}
         </div>
       )}
@@ -446,9 +444,8 @@ function ModalInformation({ closeModal }) {
 function ErrorMessage({ message, status }) {
   return (
     <p
-      className={`${
-        status ? 'visible' : 'invisible'
-      } text-red-500 text-sm whitespace-nowrap`}>
+      className={`${status ? 'visible' : 'invisible'
+        } text-red-500 text-sm whitespace-nowrap`}>
       {message}
     </p>
   );

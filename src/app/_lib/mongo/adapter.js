@@ -12,7 +12,10 @@ export async function getUserFromUserName(username) {
     if (!user) {
       return false;
     }
-    return user;
+    return {
+      ...user,
+      _id: user._id.toString(),
+    };
   } catch (error) {
     console.error("Failed to retrieve user", error);
     throw error;
@@ -23,15 +26,16 @@ export async function getUserFromDB(userId) {
   const { db } = await connectToDatabase();
 
   try {
-    console.log("Id db", userId);
     const objectId = new ObjectId(userId);
-    console.log("Id db parse", objectId);
 
     const user = await db.collection("users").findOne({ _id: objectId });
     if (!user) {
       throw new Error(`User with ID ${objectId} not found`);
     }
-    return user;
+    return {
+      ...user,
+      _id: user._id.toString(),
+    };
   } catch (error) {
     console.error("Failed to retrieve user", error);
     throw error;
@@ -42,7 +46,7 @@ export async function getUserPasskeys(userId) {
   const { db } = await connectToDatabase();
 
   try {
-    const objectId = new ObjectId(userId); // Convertir userId a ObjectId si es necesario
+    const objectId = new ObjectId(userId);
     const passkeys = await db
       .collection("passkeys")
       .find({ user: objectId })
@@ -59,7 +63,6 @@ export async function getUserOnePasskey(keyId) {
   const { db } = await connectToDatabase();
 
   try {
-    // Buscar la passkey específica del usuario
     const passkey = await db.collection("passkeys").findOne({ id: keyId });
 
     if (!passkey) {
