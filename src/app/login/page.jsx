@@ -104,9 +104,8 @@ export default function Login() {
       )}
 
       <form
-        className={`p-5 bg-white rounded-none md:rounded-tr-3xl md:rounded-bl-3xl w-full md:h-96 md:w-6/12 flex flex-col justify-center items-center ${
-          state?.errors?.user || state?.errors?.password ? 'gap-8' : 'gap-5'
-        }`}
+        className={`p-5 bg-white rounded-none md:rounded-tr-3xl md:rounded-bl-3xl w-full md:h-96 md:w-6/12 flex flex-col justify-center items-center ${state?.errors?.user || state?.errors?.password ? 'gap-8' : 'gap-5'
+          }`}
         onSubmit={handleSubmit}>
         <h1 className="text-4xl my-5 font-semibold">Inicia sesión</h1>
 
@@ -119,7 +118,7 @@ export default function Login() {
             name="email"
             className="border-[1.5px] border-blue rounded-md w-full p-3 text-blue-text"
             placeholder="Correo electrónico"
-            autocomplete="email"
+            autoComplete="email"
             required
           />
         </div>

@@ -12,7 +12,10 @@ export async function getUserFromUserName(username) {
     if (!user) {
       return false;
     }
-    return user;
+    return {
+      ...user,
+      _id: user._id.toString(),
+    };
   } catch (error) {
     console.error("Failed to retrieve user", error);
     throw error;
@@ -23,15 +26,16 @@ export async function getUserFromDB(userId) {
   const { db } = await connectToDatabase();
 
   try {
-    console.log("Id db", userId);
     const objectId = new ObjectId(userId);
-    console.log("Id db parse", objectId);
 
     const user = await db.collection("users").findOne({ _id: objectId });
     if (!user) {
       throw new Error(`User with ID ${objectId} not found`);
     }
-    return user;
+    return {
+      ...user,
+      _id: user._id.toString(),
+    };
   } catch (error) {
     console.error("Failed to retrieve user", error);
     throw error;
@@ -42,7 +46,7 @@ export async function getUserPasskeys(userId) {
   const { db } = await connectToDatabase();
 
   try {
-    const objectId = new ObjectId(userId); // Convertir userId a ObjectId si es necesario
+    const objectId = new ObjectId(userId);
     const passkeys = await db
       .collection("passkeys")
       .find({ user: objectId })
@@ -59,14 +63,13 @@ export async function getUserOnePasskey(keyId) {
   const { db } = await connectToDatabase();
 
   try {
-    // Buscar la passkey específica del usuario
     const passkey = await db.collection("passkeys").findOne({ id: keyId });
 
     if (!passkey) {
       throw new Error(`Passkey with ID ${keyId} not found`);
     }
 
-    const publicKeyBuffer = passkey.publicKey.buffer; // MongoDB Binary almacena el buffer
+    const publicKeyBuffer = passkey.publicKey.buffer;
     const publicKeyUint8Array = new Uint8Array(publicKeyBuffer);
 
     return {
@@ -93,6 +96,79 @@ export async function saveNewPasskey(newPasskey) {
     return result;
   } catch (error) {
     console.error("Failed to save passkey", error);
+    throw error;
+  }
+}
+
+export async function getAllProducts() {
+  const { db } = await connectToDatabase('randomland');
+
+  try {
+    const products = await db.collection("products").find({}).toArray();
+
+    if (!products || products.length < 1) throw new Error(`No products found`);
+
+    return products.map((product) => ({
+      ...product,
+      _id: product._id.toString(),
+    })
+    )
+  } catch (error) {
+    console.error("Failed to get all products", error);
+    throw error;
+  }
+}
+
+export async function addProduct(product) {
+  const { db } = await connectToDatabase('randomland');
+
+  try {
+    const newProduct = await db.collection("products").insertOne(product);
+
+
+    return newProduct
+  } catch (error) {
+    console.error("Failed to create product", error);
+    throw error;
+  }
+}
+
+export async function updateProduct(id, product) {
+  const { db } = await connectToDatabase('randomland');
+
+  try {
+    const result = await db.collection("products").updateOne(
+      { _id: new ObjectId(id) },
+      { $set: product }
+    );
+
+    if (result.matchedCount === 0) {
+      throw new Error('Product not found');
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Failed to update product", error);
+    throw error;
+  }
+}
+
+export async function deleteProduct(id, product) {
+  const { db } = await connectToDatabase('randomland');
+
+  try {
+    const result = await db.collection("products").deleteOne(
+      { _id: new ObjectId(id) },
+      { $set: product }
+    );
+
+    if (result.matchedCount === 0) {
+      throw new Error('Product not found');
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Failed to update product", error);
     throw error;
   }
 }

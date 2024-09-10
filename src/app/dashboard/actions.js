@@ -21,7 +21,6 @@ export async function getCurrentProfile() {
 
   const user = await getUserFromDB(idUser);
 
-  console.log(user);
 
   return user;
 }

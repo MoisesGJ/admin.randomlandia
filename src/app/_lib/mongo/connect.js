@@ -3,13 +3,17 @@ import "server-only";
 import { MongoClient } from "mongodb";
 
 const MONGODB_URI = process.env.MONGODB_URI;
-const MONGODB_DB = process.env.MONGODB_DB;
 
 let cachedClient;
 let cachedDb;
+let cachedDbName;
 
-export async function connectToDatabase() {
-  if (cachedClient && cachedDb) {
+
+export async function connectToDatabase(dbName) {
+  const MONGODB_DB = dbName || process.env.MONGODB_DB;
+
+
+  if (cachedClient && cachedDb && cachedDbName === MONGODB_DB) {
     return {
       client: cachedClient,
       db: cachedDb,
@@ -32,6 +36,7 @@ export async function connectToDatabase() {
 
     cachedClient = client;
     cachedDb = db;
+    cachedDbName = MONGODB_DB
 
     return {
       client: cachedClient,
