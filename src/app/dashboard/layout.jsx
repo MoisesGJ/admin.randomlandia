@@ -69,8 +69,8 @@ export default function DashboardLayout({ children }) {
           <ul className="space-y-2 font-medium">
             <li>
               <Link
-                href="/inicio/"
-                className={`${pathname === '/inicio/' ? 'font-bold underline' : ''
+                href="/dashboard"
+                className={`${pathname === '/dashboard' ? 'font-bold underline' : ''
                   } flex items-center p-2 rounded-lg text-white hover:bg-yellow-800/30 group`}>
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-white transition duration-75 group-hover:text-gray-200"
