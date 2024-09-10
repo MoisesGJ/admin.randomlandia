@@ -13,7 +13,7 @@ export default async function SendEmail(to, subject, template) {
   });
 
   if (error) {
-    console.log(error);
+    console.error(error);
     throw new Error({ error: error.message });
   }
 

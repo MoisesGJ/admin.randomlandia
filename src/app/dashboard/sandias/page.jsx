@@ -61,7 +61,6 @@ export default function Sandias() {
       setLoading(false);
 
       if (!result?.success) {
-        console.log(result)
         setStateFile({
           message: `Error al crear sandías: ${result.errors.global}`,
           status: false,

@@ -69,7 +69,7 @@ export async function getUserOnePasskey(keyId) {
       throw new Error(`Passkey with ID ${keyId} not found`);
     }
 
-    const publicKeyBuffer = passkey.publicKey.buffer; // MongoDB Binary almacena el buffer
+    const publicKeyBuffer = passkey.publicKey.buffer;
     const publicKeyUint8Array = new Uint8Array(publicKeyBuffer);
 
     return {
@@ -115,6 +115,60 @@ export async function getAllProducts() {
     )
   } catch (error) {
     console.error("Failed to get all products", error);
+    throw error;
+  }
+}
+
+export async function addProduct(product) {
+  const { db } = await connectToDatabase('randomland');
+
+  try {
+    const newProduct = await db.collection("products").insertOne(product);
+
+
+    return newProduct
+  } catch (error) {
+    console.error("Failed to create product", error);
+    throw error;
+  }
+}
+
+export async function updateProduct(id, product) {
+  const { db } = await connectToDatabase('randomland');
+
+  try {
+    const result = await db.collection("products").updateOne(
+      { _id: new ObjectId(id) },
+      { $set: product }
+    );
+
+    if (result.matchedCount === 0) {
+      throw new Error('Product not found');
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Failed to update product", error);
+    throw error;
+  }
+}
+
+export async function deleteProduct(id, product) {
+  const { db } = await connectToDatabase('randomland');
+
+  try {
+    const result = await db.collection("products").deleteOne(
+      { _id: new ObjectId(id) },
+      { $set: product }
+    );
+
+    if (result.matchedCount === 0) {
+      throw new Error('Product not found');
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Failed to update product", error);
     throw error;
   }
 }

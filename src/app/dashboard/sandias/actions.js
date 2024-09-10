@@ -97,6 +97,7 @@ export async function createManySandias(sandias) {
 async function create(user, password, data, many) {
   const APISandias = `${process.env.API}sandias/${many ? "many" : ""}`;
 
+
   try {
     const credentials = btoa(`${user}:${password}`);
     const r = await fetch(APISandias, {
@@ -114,6 +115,7 @@ async function create(user, password, data, many) {
 
     return true;
   } catch (error) {
+    console.error(error)
     return { error: error.message };
   }
 }
