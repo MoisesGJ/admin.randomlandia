@@ -61,18 +61,16 @@ export default function DashboardLayout({ children }) {
 
         <aside
           id="default-sidebar"
-          className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${
-            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          } sm:translate-x-0`}
+          className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+            } sm:translate-x-0`}
           aria-label="Sidebar">
           <div className="h-full px-3 py-4 overflow-y-auto bg-orange">
             <ul className="space-y-2 font-medium">
               <li>
                 <Link
-                  href="/inicio/"
-                  className={`${
-                    pathname === '/inicio/' ? 'font-bold underline' : ''
-                  } flex items-center p-2 rounded-lg text-white hover:bg-yellow-800/30 group`}>
+                  href="/dashboard"
+                  className={`${pathname === '/dashboard' ? 'font-bold underline' : ''
+                    } flex items-center p-2 rounded-lg text-white hover:bg-yellow-800/30 group`}>
                   <svg
                     className="flex-shrink-0 w-5 h-5 text-white transition duration-75 group-hover:text-gray-200"
                     aria-hidden="true"
@@ -87,11 +85,10 @@ export default function DashboardLayout({ children }) {
               <li>
                 <Link
                   href="/dashboard/sandias"
-                  className={`${
-                    pathname === '/dashboard/sandias/'
+                  className={`${pathname === '/dashboard/sandias/'
                       ? 'font-bold underline'
                       : ''
-                  } flex items-center p-2 rounded-lg text-white hover:bg-yellow-800/30 group`}>
+                    } flex items-center p-2 rounded-lg text-white hover:bg-yellow-800/30 group`}>
                   <svg
                     className="flex-shrink-0 w-5 h-5 text-white transition duration-75 group-hover:text-gray-200"
                     aria-hidden="true"
@@ -108,11 +105,10 @@ export default function DashboardLayout({ children }) {
               <li>
                 <Link
                   href="/dashboard/biometric"
-                  className={`${
-                    pathname === '/dashboard/biometric'
+                  className={`${pathname === '/dashboard/biometric'
                       ? 'font-bold underline'
                       : ''
-                  } flex items-center p-2 rounded-lg text-white hover:bg-yellow-800/30 group`}>
+                    } flex items-center p-2 rounded-lg text-white hover:bg-yellow-800/30 group`}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="24px"
