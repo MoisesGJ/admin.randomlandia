@@ -80,7 +80,6 @@ export async function validateEmailKey(token) {
 
     const session = await createSession({ id: isValidLink.payload.id });
 
-    console.log(session);
 
     if (!session) {
       return { success: false, error: "No se pudo crear la sesión" };
