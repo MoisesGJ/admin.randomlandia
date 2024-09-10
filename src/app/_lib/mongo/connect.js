@@ -12,7 +12,8 @@ let cachedDbName;
 export async function connectToDatabase(dbName) {
   const MONGODB_DB = dbName || process.env.MONGODB_DB;
 
-  if (cachedClient && cachedDb && cachedDbName) {
+
+  if (cachedClient && cachedDb && cachedDbName === MONGODB_DB) {
     return {
       client: cachedClient,
       db: cachedDb,

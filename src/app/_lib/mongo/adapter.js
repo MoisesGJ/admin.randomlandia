@@ -99,3 +99,22 @@ export async function saveNewPasskey(newPasskey) {
     throw error;
   }
 }
+
+export async function getAllProducts() {
+  const { db } = await connectToDatabase('randomland');
+
+  try {
+    const products = await db.collection("products").find({}).toArray();
+
+    if (!products || products.length < 1) throw new Error(`No products found`);
+
+    return products.map((product) => ({
+      ...product,
+      _id: product._id.toString(),
+    })
+    )
+  } catch (error) {
+    console.error("Failed to get all products", error);
+    throw error;
+  }
+}
