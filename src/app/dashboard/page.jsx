@@ -30,7 +30,7 @@ export default function Dashboard() {
       <Title text={`¡Hola, ${session.displayName}!`} />
       <SubTitle text='Esto es lo que puedes hacer por aquí:' />
 
-      <div className="mt-12 flex flex-wrap justify-between gap-5 gap-y-14">
+      <div className="mt-12 flex flex-wrap justify-between gap-5 gap-y-24 md:gap-y-18">
         {cards.map(({ title, description, redirect }, index) => <Card key={index} title={title} description={description} redirect={redirect} />)}
       </div>
     </div>
@@ -41,7 +41,11 @@ function Card({ title, description, redirect }) {
   const router = useRouter()
 
   return <div className="w-96 h-48 rounded-3xl border-[3.5px] border-blue/70 shadow-xl flex flex-grow flex-col relative">
-    <div className="absolute start-1/2 transition -translate-x-1/2 -top-4 rounded-full ring-8 ring-offset-2 ring-blue bg-blue/95 size-4 backdrop-contrast-0 hover:scale-110 duration-200"></div>
+    <div className="absolute start-1/2 transition -translate-x-1/2 -top-4">
+      <div className="rounded-full ring-8 ring-offset-2 ring-blue bg-blue/95 size-4 backdrop-contrast-0 hover:scale-110 duration-200"></div>
+      <div className="absolute -top-5 start-1/2 -translate-x-1/2 ms-[2px] z-10 rotate-[190deg] border-b-[30px] border-b-blue border-s-[10px] border-e-[10px] border-s-transparent border-e-transparent"></div>
+    </div>
+
     <h3 className="p-3 text-lg font-bold italic">{title}</h3>
     <div className="p-3 grow">
       <p>{description}</p>
