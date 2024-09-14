@@ -172,3 +172,74 @@ export async function deleteProduct(id, product) {
     throw error;
   }
 }
+
+export async function getAllOrders() {
+  const { db } = await connectToDatabase('randomland');
+
+  try {
+    const orders = await db.collection("orders").aggregate([
+      {
+        $unwind: { path: "$items" }
+      },
+      {
+        $addFields: {
+          itemsId: { $toObjectId: "$items.id" }
+        }
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "itemsId",
+          foreignField: "_id",
+          as: "productDetails"
+        }
+      },
+      {
+        $unwind: { path: "$productDetails" }
+      },
+      {
+        $addFields: {
+          "items.name": "$productDetails.name",
+          "items.images": "$productDetails.images",
+          "items.price": "$productDetails.price"
+        }
+      },
+      {
+        $addFields: {
+          _id: { $toString: "$_id" }
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          email: { $first: "$email" },
+          totalAmount: { $first: "$totalAmount" },
+          order: { $first: "$order" },
+          createdAt: { $first: "$createdAt" },
+          status: { $first: "$status" },
+          items: {
+            $push: {
+              id: "$items.id",
+              name: "$items.name",
+              price: "$items.price",
+              count: "$items.count",
+              images: "$items.images"
+            }
+          },
+        }
+      }
+    ]).toArray();
+
+
+    if (!orders || orders.length < 1) throw new Error(`No orders found`);
+
+    return orders.map((order) => ({
+      ...order,
+      _id: order._id.toString(),
+    })
+    )
+  } catch (error) {
+    console.error("Failed to get all orders", error);
+    throw error;
+  }
+}
